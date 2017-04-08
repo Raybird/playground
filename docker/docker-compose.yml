@@ -13,5 +13,20 @@ services:
       - php
   php:
     image: raybird/dockerphp7fpm
+    env_file: .env
     volumes:
-      - ./www/html:/var/www/html        
+      - ./www/html:/var/www/html
+    links:
+      - mariadb
+  mariadb:
+    image: mariadb:latest
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+    volumes:
+      - ./mariadb/data:/var/lib/mysql
+    ports:
+      - 3306:3306
