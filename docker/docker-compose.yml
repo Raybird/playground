@@ -30,3 +30,13 @@ services:
       - ./mariadb/data:/var/lib/mysql
     ports:
       - 3306:3306
+# phpmyadmin for develop
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - mariadb
+    env_file: .env
+    environment:
+      PMA_HOST: mariadb
+    ports:
+      - "18081:80"
