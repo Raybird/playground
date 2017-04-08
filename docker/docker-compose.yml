@@ -1,0 +1,17 @@
+version: '2'
+volumes:
+  database: {}
+  temp: {}
+services:
+  nginx:
+    image: raybird/dockernginx
+    ports:
+      - "18080:80"
+    volumes:
+      - ./www/html:/var/www/html
+    links:
+      - php
+  php:
+    image: raybird/dockerphp7fpm
+    volumes:
+      - ./www/html:/var/www/html        
