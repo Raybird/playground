@@ -4,30 +4,34 @@ volumes:
   temp: {}
 services:
   nginx:
+    extends:
+      file: base.yml
+      service: service
     image: raybird/dockernginx
     ports:
       - "18080:80"
-    volumes:
-      - ./www/html:/var/www/html
     links:
       - php
+    logging:
+      driver: syslog
+      options:
+        tag: "playground-http"
   php:
+    extends:
+      file: base.yml
+      service: service
     image: raybird/dockerphp7fpm
-    env_file: .env
-    volumes:
-      - ./www/html:/var/www/html
     links:
       - mariadb
+    logging:
+      driver: syslog
+      options:
+        tag: "playground-php"
   mariadb:
+    extends:
+      file: base.yml
+      service: service
     image: mariadb:latest
-    env_file: .env
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-    volumes:
-      - ./mariadb/data:/var/lib/mysql
     ports:
       - 3306:3306
 # phpmyadmin for develop

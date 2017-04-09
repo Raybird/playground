@@ -1,0 +1,40 @@
+version: '2'
+volumes:
+  database: {}
+  temp: {}
+services:
+  base:
+    image: raybird/dockerphp7fpm
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+    volumes:
+      - ./www/html:/var/www/html
+      - ./www/php:/var/www/php
+      - ./mariadb/data:/var/lib/mysql
+  service: # for server
+    extends: base
+    restart: unless-stopped
+    logging:
+      driver: syslog
+      options:
+        tag: "playground-misc"             
+  dev: # for development
+    extends: base
+    user: "1000"
+  php-bash: #cmd run bash shell under php container
+    extends: dev
+    command: /bin/bash
+  composer: #cmd run php composer
+    extends: dev
+    image: composer/composer:latest
+    working_dir: /var/www/php
+    entrypoint: composer
+  phpunit: #cmd run phpunit commands
+    extends: dev
+    working_dir: /var/www/php
+    entrypoint: /var/www/php/vendor/bin/phpunit
+

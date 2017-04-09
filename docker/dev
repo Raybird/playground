@@ -1,0 +1,9 @@
+#!/bin/bash
+if [ $# -eq 0 ]; then
+	echo 'usage:'
+	echo '	./run [command]'
+	echo 'command:'
+	grep '#cmd' base.yml
+else
+	docker-compose -f base.yml run --rm $@
+fi
