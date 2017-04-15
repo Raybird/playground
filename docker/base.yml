@@ -21,7 +21,12 @@ services:
     logging:
       driver: syslog
       options:
-        tag: "playground-misc"             
+        tag: "playground-misc"
+  nginx-bash: #cmd run bash shell under nginx container
+    extends:
+      service: service
+    image: raybird/dockernginx
+    command: /bin/bash          
   dev: # for development
     extends: base
     user: "1000"
