@@ -22,25 +22,25 @@ services:
       service: service
     image: raybird/dockerphp7fpm
     links:
-      - mariadb
+      - mysql
     logging:
       driver: syslog
       options:
         tag: "playground-php"
-  mariadb:
+  mysql:
     extends:
       file: base.yml
       service: service
-    image: mariadb:latest
+    image: mysql:latest
     ports:
       - 3306:3306
 # phpmyadmin for develop
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     links:
-      - mariadb
+      - mysql
     env_file: .env
     environment:
-      PMA_HOST: mariadb
+      PMA_HOST: mysql
     ports:
       - "18081:80"
